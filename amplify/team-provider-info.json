@@ -1,0 +1,15 @@
+{
+    "master": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-mochikaerumanagement-master-141952-authRole",
+            "UnauthRoleArn": "arn:aws:iam::783159031027:role/amplify-mochikaerumanagement-master-141952-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::783159031027:role/amplify-mochikaerumanagement-master-141952-authRole",
+            "Region": "ap-northeast-1",
+            "DeploymentBucketName": "amplify-mochikaerumanagement-master-141952-deployment",
+            "UnauthRoleName": "amplify-mochikaerumanagement-master-141952-unauthRole",
+            "StackName": "amplify-mochikaerumanagement-master-141952",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:783159031027:stack/amplify-mochikaerumanagement-master-141952/bef973b0-7a21-11ea-8be6-0ae3ffe7265e",
+            "AmplifyAppId": "d3lujvrd6uqqp0"
+        }
+    }
+}
