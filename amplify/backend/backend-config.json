@@ -1,1 +1,10 @@
-{}
+{
+	"auth": {
+		"mochikaerumanagement1b914471": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}

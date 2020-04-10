@@ -10,6 +10,11 @@
             "StackName": "amplify-mochikaerumanagement-master-141952",
             "StackId": "arn:aws:cloudformation:ap-northeast-1:783159031027:stack/amplify-mochikaerumanagement-master-141952/bef973b0-7a21-11ea-8be6-0ae3ffe7265e",
             "AmplifyAppId": "d3lujvrd6uqqp0"
+        },
+        "categories": {
+            "auth": {
+                "mochikaerumanagement1b914471": {}
+            }
         }
     }
 }

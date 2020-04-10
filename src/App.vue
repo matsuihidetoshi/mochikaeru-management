@@ -16,6 +16,15 @@
     </v-app-bar>
 
     <v-content>
+      <div id="nav" class="pa-3">
+        <router-link to="/">トップページ</router-link> |
+        <router-link to="/signin">ログイン/ログアウト</router-link> | 
+        <router-link to="/shop">店舗</router-link> |
+        <router-link to="/item">商品</router-link> |
+        <router-link to="/sideitem">商品（画像無し）</router-link> |
+        <router-link to="/notice">補足</router-link> |
+        <router-link to="/about">このサービスについて</router-link>
+      </div>
       <router-view></router-view>
     </v-content>
   </v-app>
