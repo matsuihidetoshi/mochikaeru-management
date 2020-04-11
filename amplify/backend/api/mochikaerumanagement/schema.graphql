@@ -1,0 +1,65 @@
+type Shop
+  @model
+  @auth(rules: [
+    {allow: groups, groups: ["Admin"], queries: [get, list], mutations: [create, update, delete]},
+    {allow: owner}
+  ])
+{
+  id: ID!
+  name: String!
+  shortName: String!
+  key: String!
+  description: String
+  zipcode: String!
+  prefecture: String!
+  city: String!
+  address: String!
+  otherAddress: String!
+  tel: String!
+  email: String!
+  receptionHours: String!
+  deliveryHours: String!
+  close: String!
+  payments: String!
+  url: String!
+  map: String!
+  status: Int!
+}
+type Item
+  @model 
+  @auth(rules: [
+    {allow: groups, groups: ["Admin"], queries: [get, list], mutations: [create, update, delete]},
+    {allow: owner}
+  ])
+{
+  id: ID!
+  key: String!
+  name: String!
+  price: Int!
+  description: String
+}
+type SideItem
+  @model
+  @auth(rules: [
+    {allow: groups, groups: ["Admin"], queries: [get, list], mutations: [create, update, delete]},
+    {allow: owner}
+  ])
+{
+  id: ID!
+  key: String!
+  name: String!
+  price: Int!
+  description: String
+}
+type Notice
+  @model
+  @auth(rules: [
+    {allow: groups, groups: ["Admin"], queries: [get, list], mutations: [create, update, delete]},
+    {allow: owner}
+  ])
+{
+  id: ID!
+  key: String!
+  title: String
+  content: String
+}
