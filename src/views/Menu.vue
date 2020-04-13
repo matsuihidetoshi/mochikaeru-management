@@ -31,6 +31,12 @@
       </v-list-item-content>
     </v-list-item>
     <!-- Notice -->
+    <v-list-item link to="/signin">
+      <v-list-item-content>
+        <v-list-item-title>サインイン/サインアウト</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+    <!-- Notice -->
     <v-list-item link to="/about">
       <v-list-item-content>
         <v-list-item-title>このサイトについて</v-list-item-title>

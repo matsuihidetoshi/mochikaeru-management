@@ -51,7 +51,8 @@ const routes = [
   {
     path: '/',
     name: 'top',
-    component: Top
+    component: Top,
+    meta: { requireAuth: true }
   },
   {
     path: '/signin',
