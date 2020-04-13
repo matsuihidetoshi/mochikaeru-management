@@ -26,7 +26,8 @@
             >
               &nbsp; {{ status[currentStatus] }}
             </span>
-            </h2>
+          </h2>
+          <p>下記ボタンで公開状態を変更できます</p>
           <v-row>
             <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
               <v-btn
