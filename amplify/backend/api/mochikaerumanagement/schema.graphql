@@ -14,15 +14,15 @@ type Shop
   prefecture: String!
   city: String!
   address: String!
-  otherAddress: String!
+  otherAddress: String
   tel: String!
-  email: String!
+  email: String
   receptionHours: String!
   deliveryHours: String!
   close: String!
   payments: String!
-  url: String!
-  map: String!
+  url: String
+  map: String
   status: Int!
 }
 type Item

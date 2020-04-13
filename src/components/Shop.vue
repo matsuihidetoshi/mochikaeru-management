@@ -1,6 +1,11 @@
 <template>
   <div class="shop">
-    <h1>This is Shop page.</h1>
+    <h1>店舗情報管理</h1>
+    <v-row>
+      <v-col cols="12">
+        
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>
@@ -14,25 +19,14 @@ export default {
       owner: null,
       shop: null,
       contents: {
-        name: "",
-        shortName: "",
-        key: "",
-        description: "",
-        zipcode: "",
-        prefecture: "",
-        city: "",
-        address: "",
-        otherAddress: "",
-        tel: "",
-        email: "",
-        receptionHours: "",
-        deliveryHours: "",
-        close: "",
-        payments: "",
-        url: "",
-        map: "",
-        status: ""
-      }
+        name: "", shortName: "", key: "", description: "",
+        zipcode: "", prefecture: "", city: "", address: "", otherAddress: "",
+        tel: "", email: "", receptionHours: "", deliveryHours: "", close: "",
+        payments: "", url: "", map: "", status: ""
+      },
+      labels: [
+        '店舗名', '店舗略称', 
+      ]
     }
   },
   methods: {
