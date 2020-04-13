@@ -35,6 +35,7 @@ let languageDict = {
     "1 validation error detected: Value at 'password' failed to satisfy constraint: Member must have length greater than or equal to 6": 'パスワードは6文字以上にしてください',
     'Username/client id combination not found.': 'このメールアドレスは登録されていません',
     'Password cannot be empty': 'パスワードを入力してください',
+    'Incorrect username or password.': 'メールアドレス、またはパスワードが間違っています',
     'Attempt limit exceeded, please try after some time.': '何度も確認コードを発行しています。少し待ってから再度試してください。'
   }
 }
