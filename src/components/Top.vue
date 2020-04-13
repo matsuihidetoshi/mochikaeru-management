@@ -3,17 +3,8 @@
     <h1>管理メニュー</h1>
     <p>下記より編集する情報を選択してください</p>
     <v-row>
-      <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
-        <v-btn width="100%" to="/shop" class="font-weight-bold button">店舗</v-btn>
-      </v-flex>
-      <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
-        <v-btn width="100%" to="/item" class="font-weight-bold button">商品</v-btn>
-      </v-flex>
-      <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
-        <v-btn width="100%" to="/sideitem" class="font-weight-bold button">商品（写真無し）</v-btn>
-      </v-flex>
-      <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
-        <v-btn width="100%" to="/notice" class="font-weight-bold button">補足</v-btn>
+      <v-flex v-for="(value, index) in menu" v-bind:key="index" xs12 sm6 md4 text-center class="pa-3 mh-10">
+        <v-btn width="100%" :to="menuPath[index]" class="font-weight-bold button">{{ value }}</v-btn>
       </v-flex>
     </v-row>
     <v-row>
@@ -29,42 +20,15 @@
           </h2>
           <p>下記ボタンで公開状態を変更できます</p>
           <v-row>
-            <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
+            <v-flex v-for="(value, index) in status" v-bind:key="index" xs12 sm6 md4 text-center class="pa-3 mh-10">
               <v-btn
-                @click.stop="dialog = true;dialogStatus = 0"
+                @click.stop="dialog = true;dialogStatus = index"
                 width="100%"
-                class="font-weight-bold success"
+                :class="'font-weight-bold ' + statusColor[index]"
               >
-                営業中
+                {{ status[index] }}
               </v-btn>
-            </v-flex>
-            <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
-              <v-btn
-                @click.stop="dialog = true;dialogStatus = 1"
-                width="100%"
-                class="font-weight-bold primary"
-              >
-                本日休業
-              </v-btn>
-            </v-flex>
-            <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
-              <v-btn
-                @click.stop="dialog = true;dialogStatus = 2"
-                width="100%"
-                class="font-weight-bold accent"
-              >
-                準備中
-              </v-btn>
-            </v-flex>
-            <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
-              <v-btn
-                @click.stop="dialog = true;dialogStatus = 3"
-                width="100%"
-                class="font-weight-bold"
-              >
-                非公開
-              </v-btn>
-            </v-flex>
+            </v-flex>            
           </v-row>
         </v-card>
       </v-col>
@@ -104,6 +68,8 @@ export default {
       dialog: false,
       status: ["営業中", "本日休業", "準備中", "非公開"],
       statusColor: ["success", "primary", "accent", ""],
+      menu: ["店舗", "商品", "商品（写真無し）", "補足"],
+      menuPath: ["/shop", "/item", "/sideitem", "/notice"],
       dialogStatus: null,
       currentStatus: 0
     }
