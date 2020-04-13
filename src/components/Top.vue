@@ -56,6 +56,15 @@
                 準備中
               </v-btn>
             </v-flex>
+            <v-flex xs12 sm6 md4 text-center class="pa-3 mh-10">
+              <v-btn
+                @click.stop="dialog = true;dialogStatus = 3"
+                width="100%"
+                class="font-weight-bold"
+              >
+                非公開
+              </v-btn>
+            </v-flex>
           </v-row>
         </v-card>
       </v-col>
@@ -93,8 +102,8 @@ export default {
   data() {
     return {
       dialog: false,
-      status: ["営業中", "本日休業", "準備中"],
-      statusColor: ["success", "primary", "accent"],
+      status: ["営業中", "本日休業", "準備中", "非公開"],
+      statusColor: ["success", "primary", "accent", ""],
       dialogStatus: null,
       currentStatus: 0
     }
