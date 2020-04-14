@@ -1,6 +1,6 @@
 module.exports = {
   pwa: {
-    name: 'Mochikaeru',
+    name: 'Mochikaeru Management',
     themeColor: '#eb3f25',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
