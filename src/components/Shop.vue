@@ -4,6 +4,7 @@
     <h2 v-if="!shop && !loading" class="error--text">店舗情報が未登録です</h2>
     <v-row>
       <v-col class="pa-5">
+
         <v-form v-model="valid">
           <v-text-field
             v-for="(content, index, i) in contents"
@@ -15,6 +16,18 @@
             class="pa-3"
           ></v-text-field>
         </v-form>
+
+        <div v-if="shop">
+          <v-file-input
+            v-for="(image, index, i) in images"
+            v-bind:key="index"
+            id="file"
+            @change="setFile($event, index)"
+            accept="image/*"
+            :label="imageLabels[i]"
+          ></v-file-input>
+        </div>
+        
         <v-btn to="/">戻る</v-btn>
         <v-progress-circular
           indeterminate
@@ -26,7 +39,7 @@
         <p :class="'success--text title font-weight-bold absolute-center display-' + done">{{ action }}しました</p>
         <p :class="'error--text font-weight-bold absolute-center display-' + failed">{{ action }}できませんでした</p>
         <v-btn v-if="!shop" @click="createShop()" class="float-right success">登録</v-btn>
-        <v-btn v-if="shop" @click="updateShop()" class="float-right success">更新</v-btn>
+        <v-btn v-if="shop" @click="updateShop();upload()" class="float-right success">更新</v-btn>
       </v-col>
     </v-row>
   </div>
@@ -35,6 +48,7 @@
 import { API, graphqlOperation} from "aws-amplify"
 import { createShop, updateShop } from "../graphql/mutations"
 import { listShops } from "../graphql/queries"
+import { Storage } from 'aws-amplify'
 
 export default {
   name: 'Shop',
@@ -67,7 +81,11 @@ export default {
       loading: false,
       done: false,
       failed: false,
-      action: ''
+      action: '', 
+      limit: 2 ** 31 - 1,
+      images: {thumbnail: null, main: null, sub: null},
+      results: {thumbnail: null, main: null, sub: null},
+      imageLabels: ['サムネイル画像', 'メイン画像', 'サブ画像']
     }
   },
   mounted() {
@@ -77,9 +95,8 @@ export default {
     getShop: async function () {
       this.loading = true
       let shops = await API.graphql(graphqlOperation(
-        listShops, {limit: 1}
+        listShops, {limit: this.limit}
       ))
-      console.log(shops)
       this.shop = shops.data.listShops.items[0]
       if (this.shop) this.contents = Object.assign({}, this.shop)
       delete this.contents.id
@@ -123,7 +140,6 @@ export default {
         this.loading = false
         this.done = true
       } catch (error) {
-        console.log(error)
         this.loading = false
         this.failed = true
       }
@@ -134,7 +150,20 @@ export default {
         if (!content) {valid = false}
       })
       return valid
-    }
+    },
+    setFile: function (e, filename) {
+      this.images[filename] = e
+    },
+    upload: async function () {
+      Object.keys(this.images).map(key => {
+        if (this.images[key]) {
+          Storage.put(this.shop.key + '/' + key + '.jpg', this.images[key])
+          .then (result => {
+            this.results[key] = result
+          }).catch(err => this.results[key] = err)
+        }
+      })
+    },
   }
 }
 </script>

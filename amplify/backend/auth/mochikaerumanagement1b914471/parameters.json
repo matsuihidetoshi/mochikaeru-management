@@ -1,6 +1,6 @@
 {
     "identityPoolName": "mochikaerumanagement1b914471_identitypool_1b914471",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mochik1b914471",
     "userPoolName": "mochikaerumanagement1b914471_userpool_1b914471",
     "autoVerifiedAttributes": [
