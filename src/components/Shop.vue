@@ -1,10 +1,17 @@
 <template>
   <div class="shop">
     <h1>店舗情報管理</h1>
+    {{ valid }}
     <v-row>
-      <v-col cols="12">
-        
-      </v-col>
+      <v-form v-model="valid">
+        <v-text-field
+          v-for="(content, index, i) in contents"
+          v-bind:key="i"
+          :v-model="content"
+          :rules="nameRules"
+          :label="labels[i]"
+        ></v-text-field>
+      </v-form>
     </v-row>
   </div>
 </template>
@@ -12,6 +19,7 @@
 import { API, graphqlOperation} from "aws-amplify"
 import { createShop, updateShop } from "../graphql/mutations"
 import { listShops } from "../graphql/queries"
+
 export default {
   name: 'Shop',
   data() {
@@ -19,14 +27,34 @@ export default {
       owner: null,
       shop: null,
       contents: {
-        name: "", shortName: "", key: "", description: "",
+        name: "", shortName: "", description: "",
         zipcode: "", prefecture: "", city: "", address: "", otherAddress: "",
         tel: "", email: "", receptionHours: "", deliveryHours: "", close: "",
-        payments: "", url: "", map: "", status: ""
+        payments: "", url: "", map: ""
       },
       labels: [
-        '店舗名', '店舗略称', 
-      ]
+        '店舗名', '店舗略称', '店舗紹介',
+        '郵便番号', '都道府県', '市町村', '詳細住所', '建物名・室等',
+        '電話番号', 'メールアドレス', '注文受付時間', '受渡可能時間', '定休日',
+        '支払い方法', 'URL', 'Google Map 埋め込みタグ'
+      ],
+      valid: false,
+      textRules: [
+        v => !!v || '必須項目です'
+      ],
+      emailRules: [
+        v => !!v || '必須項目です',
+        v => /.+@.+/.test(v) || 'メールアドレスの形式が正しくありません'
+      ],
+      numberRules: [
+        v => !!v || '必須項目です',
+        v => /^\d*$/.test(v) || '数字のみで入力してください'
+      ],
+      validations: [
+        this.textRules, this.textRules, '',
+        this.textRules, this.textRules, this.textRules, this.textRules, '',
+        
+      ],
     }
   },
   methods: {
