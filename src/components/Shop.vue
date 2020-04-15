@@ -1,17 +1,33 @@
 <template>
   <div class="shop">
     <h1>店舗情報管理</h1>
-    {{ valid }}
+    <h2 v-if="!shop && !loading" class="error--text">店舗情報が未登録です</h2>
     <v-row>
-      <v-form v-model="valid">
-        <v-text-field
-          v-for="(content, index, i) in contents"
-          v-bind:key="i"
-          :v-model="content"
-          :rules="nameRules"
-          :label="labels[i]"
-        ></v-text-field>
-      </v-form>
+      <v-col class="pa-5">
+        <v-form v-model="valid">
+          <v-text-field
+            v-for="(content, index, i) in contents"
+            v-bind:key="i"
+            v-model="contents[index]"
+            :rules="validations[i]"
+            :label="labels[i]"
+            required
+            class="pa-3"
+          ></v-text-field>
+        </v-form>
+        <v-btn to="/">戻る</v-btn>
+        <v-progress-circular
+          indeterminate
+          color="success"
+          :class="'absolute-center display-' + loading"
+          :size="80"
+          :width="10"
+        ></v-progress-circular>
+        <p :class="'success--text title font-weight-bold absolute-center display-' + done">{{ action }}しました</p>
+        <p :class="'error--text font-weight-bold absolute-center display-' + failed">{{ action }}できませんでした</p>
+        <v-btn v-if="!shop" @click="createShop()" class="float-right success">登録</v-btn>
+        <v-btn v-if="shop" @click="updateShop()" class="float-right success">更新</v-btn>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -27,10 +43,10 @@ export default {
       owner: null,
       shop: null,
       contents: {
-        name: "", shortName: "", description: "",
-        zipcode: "", prefecture: "", city: "", address: "", otherAddress: "",
-        tel: "", email: "", receptionHours: "", deliveryHours: "", close: "",
-        payments: "", url: "", map: ""
+        name: null, shortName: null, description: null,
+        zipcode: null, prefecture: null, city: null, address: null, otherAddress: null,
+        tel: null, email: null, receptionHours: null, deliveryHours: null, close: null,
+        payments: null, url: null, map: null
       },
       labels: [
         '店舗名', '店舗略称', '店舗紹介',
@@ -39,52 +55,75 @@ export default {
         '支払い方法', 'URL', 'Google Map 埋め込みタグ'
       ],
       valid: false,
-      textRules: [
-        v => !!v || '必須項目です'
-      ],
-      emailRules: [
-        v => !!v || '必須項目です',
-        v => /.+@.+/.test(v) || 'メールアドレスの形式が正しくありません'
-      ],
-      numberRules: [
-        v => !!v || '必須項目です',
-        v => /^\d*$/.test(v) || '数字のみで入力してください'
-      ],
       validations: [
-        this.textRules, this.textRules, '',
-        this.textRules, this.textRules, this.textRules, this.textRules, '',
-        
+        [v => !!v || '必須項目です'], [v => !!v || '必須項目です'], [],
+        [v => !!v || '必須項目です'], [v => !!v || '必須項目です'],
+        [v => !!v || '必須項目です'], [v => !!v || '必須項目です'], [],
+        [v => !!v || '必須項目です', v => /^\d*$/.test(v) || '数字のみで入力してください'],
+        [v => /.+@.+/.test(v) || 'メールアドレスの形式が正しくありません'],
+        [v => !!v || '必須項目です'], [v => !!v || '必須項目です'], [v => !!v || '必須項目です'],
+        [v => !!v || '必須項目です'], [], []
       ],
+      loading: false,
+      done: false,
+      failed: false,
+      action: ''
     }
+  },
+  mounted() {
+    this.getShop()
   },
   methods: {
     getShop: async function () {
+      this.loading = true
       let shops = await API.graphql(graphqlOperation(
         listShops, {limit: 1}
       ))
-      this.shop = shops[0]
+      console.log(shops)
+      this.shop = shops.data.listShops.items[0]
+      if (this.shop) this.contents = Object.assign({}, this.shop)
+      delete this.contents.id
+      delete this.contents.key
+      delete this.contents.status
+      delete this.contents.owner
+      this.loading = false
     },
     createShop: async function () {
-      if (!this.valid()) return
-      let shop = this.contents
+      this.action = '登録'
+      if (!this.valid) return
+      this.loading = true
+      let shop = Object.assign({}, this.contents)
+      shop.key = 'shop' + new Date().getTime()
+      shop.status = 0
       try {
         await API.graphql(graphqlOperation(
           createShop, {input: shop}
         ))
+        this.loading = false
+        this.done = true
       } catch (error) {
-        error
+        this.loading = false
+        this.failed = true
       }
     },
-    updateShop: async function (id) {
-      if (!this.valid()) return
-      let shop = this.contents
-      shop.id = id
+    updateShop: async function () {
+      this.action = '更新'
+      if (!this.valid) return
+      this.loading = true
+      let shop = Object.assign({}, this.contents)
+      shop.id = this.shop.id
+      shop.key = this.shop.key
+      shop.status = this.shop.status
       try {
         await API.graphql(graphqlOperation(
           updateShop, {input: shop}
         ))
+        this.loading = false
+        this.done = true
       } catch (error) {
-        error
+        console.log(error)
+        this.loading = false
+        this.failed = true
       }
     },
     validate: function () {
@@ -98,5 +137,16 @@ export default {
 }
 </script>
 <style>
-
+.absolute-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+.display-true {
+  display: block;
+}
+.display-false {
+  display: none;
+}
 </style>
