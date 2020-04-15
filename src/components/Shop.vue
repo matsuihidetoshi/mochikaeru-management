@@ -101,6 +101,7 @@ export default {
         ))
         this.loading = false
         this.done = true
+        this.getShop()
       } catch (error) {
         this.loading = false
         this.failed = true
