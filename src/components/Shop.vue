@@ -110,6 +110,7 @@ export default {
     updateShop: async function () {
       this.action = '更新'
       if (!this.valid) return
+      this.done = false
       this.loading = true
       let shop = Object.assign({}, this.contents)
       shop.id = this.shop.id
