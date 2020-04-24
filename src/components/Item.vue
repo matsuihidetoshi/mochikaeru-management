@@ -3,10 +3,11 @@
     <h1>商品情報管理</h1>
     <h2 v-if="items.length == 0" class="error--text">商品情報が未登録です</h2>
     <v-row>
-      <v-col span="12">
+      <v-col v-if="!loading" span="12">
         <v-card
         v-for="(item, index) in items"
         v-bind:key="index"
+        @click.stop="dialog = true;action = '編集';editItem(index)"
         class="pa-3 ma-3">
           <v-card-title>
             {{ item.name }}
@@ -56,10 +57,25 @@
                 戻る
               </v-btn>
               <v-btn
+                v-if="action == '作成'"
                 class="success"
                 @click="createItem"
               >
                 保存
+              </v-btn>
+              <v-btn
+                v-if="action == '編集'"
+                class="error"
+                @click="dialog = false"
+              >
+                削除
+              </v-btn>
+              <v-btn
+                v-if="action == '編集'"
+                class="success"
+                @click="createItem"
+              >
+                更新
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -77,7 +93,7 @@
 </template>
 <script>
 import { API, graphqlOperation} from "aws-amplify"
-import { createItem, updateItem } from "../graphql/mutations"
+import { createItem, updateItem, deleteItem } from "../graphql/mutations"
 import { listShops, listItems } from "../graphql/queries"
 import { Storage } from 'aws-amplify'
 
@@ -101,7 +117,6 @@ export default {
         [v => !!v || '必須項目です', v => /^\d*$/.test(v) || '数字のみで入力してください'],
         []
       ],
-      oading: false,
       done: false,
       failed: false,
       limit: 2 ** 31 - 1,
@@ -110,6 +125,7 @@ export default {
       dialog: false,
       action: null,
       loading: false,
+      selected: null,
     }
   },
   mounted() {
@@ -152,6 +168,14 @@ export default {
         this.dialog = false
       }
     },
+    editItem: function(id) {
+      this.item = this.items[id]
+      this.selected = this.item.id
+      delete this.item.id
+      delete this.item.key
+      delete this.item.owner
+      console.log(this.item)
+    },
     updateItem: async function (id) {
       if (!this.valid) return
       this.done = false
@@ -172,6 +196,24 @@ export default {
         this.dialog = false
       }
     },
+    deleteItem: async function (id) {
+      this.done = false
+      this.loading = true
+      let item = this.item
+      item.id = id
+      try {
+        await API.graphql(graphqlOperation(
+          deleteItem, {input: item}
+        ))
+        this.loading = false
+        this.done = true
+        this.dialog = false
+      } catch (error) {
+        this.loading = false
+        this.failed = true
+        this.dialog = false
+      }
+    },
     upload: async function () {
       Storage.put(this.shop.key + '/items/' + this.item.id + '.jpg', this.image)
       .then (result => {
@@ -182,5 +224,16 @@ export default {
 }
 </script>
 <style>
-
+.absolute-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+.display-true {
+  display: block;
+}
+.display-false {
+  display: none;
+}
 </style>
